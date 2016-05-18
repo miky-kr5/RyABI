@@ -1,0 +1,7 @@
+* RyABI
+
+** Abstract
+RyABI (/Robótica y Aprendizaje Bio-Inspirado/ - Robotics and Bio-Inspired Learning) is a control program for LEGO Mindstorms NXT using the LeJOS NXJ
+firmware. It is developed as part of the homonimous course being taught at the Computer Sciences School of the UCV.
+
+Future verions of this README file will include a technical report on the development of the project.
