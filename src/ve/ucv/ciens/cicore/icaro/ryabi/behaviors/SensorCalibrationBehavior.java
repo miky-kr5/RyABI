@@ -10,14 +10,10 @@ import lejos.robotics.navigation.DifferentialPilot;
 
 public class SensorCalibrationBehavior extends BaseBehavior {
 	private boolean sensorsCalibrated;
-	private float wheelRadius;
-	private float trackWidth;
 
 	public SensorCalibrationBehavior(UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelRadius, float trackWidth) {
-		super(sonar, touch, light, compass);
+		super(null, sonar, touch, light, compass, wheelRadius, trackWidth);
 		sensorsCalibrated = false;
-		this.wheelRadius = wheelRadius;
-		this.trackWidth = trackWidth;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package ve.ucv.ciens.cicore.icaro.ryabi.detectors;
+package ve.ucv.ciens.cicore.icaro.ryabi.sensors;
 
 import lejos.geom.Point;
 import lejos.nxt.LightSensor;
