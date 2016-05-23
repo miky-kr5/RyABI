@@ -24,7 +24,7 @@ public class SensorCalibrationBehavior extends BaseBehavior {
 	@Override
 	public void action() {
 		System.out.println("Calib. compass");
-		DifferentialPilot p = new DifferentialPilot(wheelRadius, trackWidth, Motor.A, Motor.C);
+		DifferentialPilot p = new DifferentialPilot(wheelDiameter, trackWidth, Motor.A, Motor.C);
 		p.setRotateSpeed(25);
 		compass.startCalibration();
 		p.rotate(720, false);

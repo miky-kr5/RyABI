@@ -18,11 +18,12 @@ import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.WanderBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectionListener;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.LightFeatureDetector;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.SensorCalibrationBehavior;
+import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.VictoryBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.QuitButtonListener;
 
 @SuppressWarnings("deprecation")
 public class RyABI {
-	private static final float WHEEL_RADIUS = 56.0f;
+	private static final float WHEEL_DIAMETER = 56.0f;
 	private static final float TRACK_WIDTH = 155.0f;
 
 	private static ArcRotateMoveController  pilot;
@@ -45,7 +46,7 @@ public class RyABI {
 		light = new LightSensor(SensorPort.S4);
 
 		/* Create the pilot. */
-		pilot = new CompassPilot(compass, WHEEL_RADIUS, TRACK_WIDTH, Motor.A, Motor.C);
+		pilot = new CompassPilot(compass, WHEEL_DIAMETER, TRACK_WIDTH, Motor.A, Motor.C);
 
 		/* Create the feature detectors and their listener. */
 		rangeDetector = new RangeFeatureDetector(sonar, 20, 200);
@@ -65,10 +66,11 @@ public class RyABI {
 		Button.ESCAPE.addButtonListener(new QuitButtonListener());
 
 		/* Create the behaviors. */
-		behaviors = new Behavior[3];
-		behaviors[0] = new WanderBehavior(pilot, sonar, touch, light, compass, WHEEL_RADIUS, TRACK_WIDTH);
-		behaviors[1] = new SensorCalibrationBehavior(sonar, touch, light, compass, WHEEL_RADIUS, TRACK_WIDTH);
-		behaviors[2] = new AvoidObstaclesBehavior(pilot, sonar, touch, light, compass, WHEEL_RADIUS, TRACK_WIDTH);
+		behaviors = new Behavior[4];
+		behaviors[0] = new WanderBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[1] = new SensorCalibrationBehavior(sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[2] = new AvoidObstaclesBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[3] = new VictoryBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
 
 		/* Start the program. */
 		arbitrator = new Arbitrator(behaviors, true);

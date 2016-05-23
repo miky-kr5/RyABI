@@ -13,8 +13,8 @@ import ve.ucv.ciens.cicore.icaro.ryabi.utils.RobotStateSingleton;
 public class WanderBehavior extends BaseBehavior {
 	private RobotStateSingleton           state;
 
-	public WanderBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelRadius, float trackWidth) {
-		super(pilot, sonar, touch, light, compass, wheelRadius, trackWidth);
+	public WanderBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelDiameter, float trackWidth) {
+		super(pilot, sonar, touch, light, compass, wheelDiameter, trackWidth);
 
 		state = RobotStateSingleton.getInstance();
 

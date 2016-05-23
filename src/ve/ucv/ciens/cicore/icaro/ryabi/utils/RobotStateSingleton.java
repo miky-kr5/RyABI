@@ -15,7 +15,7 @@ public final class RobotStateSingleton {
 		return SingletonHolder.INSTANCE;
 	}
 
-	public void setState(States state) {
+	public synchronized void setState(States state) {
 		this.state = state;
 	}
 
@@ -24,6 +24,6 @@ public final class RobotStateSingleton {
 	}
 
 	public enum States {
-		WANDER, SEARCH_BALL, BALL_FOUND, VICTORY;
+		WANDER, SEARCH_BALL, BALL_FOUND, VICTORY, DONE;
 	}
 }

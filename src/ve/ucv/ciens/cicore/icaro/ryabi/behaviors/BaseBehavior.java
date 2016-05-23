@@ -13,16 +13,16 @@ public abstract class BaseBehavior implements Behavior {
 	protected TouchSensor             touch;
 	protected CompassHTSensor         compass;
 	protected LightSensor             light;
-	protected float                   wheelRadius;
+	protected float                   wheelDiameter;
 	protected float                   trackWidth;
 
-	public BaseBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelRadius, float trackWidth) {
+	public BaseBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelDiameter, float trackWidth) {
 		this.pilot = pilot;
 		this.sonar = sonar;
 		this.touch = touch;
 		this.compass = compass;
 		this.light = light;
-		this.wheelRadius = wheelRadius;
+		this.wheelDiameter = wheelDiameter;
 		this.trackWidth = trackWidth;
 	}
 
