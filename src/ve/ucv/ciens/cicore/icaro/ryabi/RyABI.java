@@ -14,11 +14,14 @@ import lejos.robotics.objectdetection.TouchFeatureDetector;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.AvoidObstaclesBehavior;
-import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.WanderBehavior;
-import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectionListener;
-import ve.ucv.ciens.cicore.icaro.ryabi.sensors.LightFeatureDetector;
+import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.CatchBallBehavior;
+import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.SearchBoxBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.SensorCalibrationBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.VictoryBehavior;
+import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.WanderBehavior;
+import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectorsHandler;
+import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectionListener;
+import ve.ucv.ciens.cicore.icaro.ryabi.sensors.LightFeatureDetector;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.QuitButtonListener;
 
 @SuppressWarnings("deprecation")
@@ -37,8 +40,9 @@ public class RyABI {
 	private static TouchFeatureDetector     touchDetector;
 	private static LightFeatureDetector     lightDetector;
 	private static FeatureDetectionListener featureListener;
+	private static FeatureDetectorsHandler  detectorHandler;
 
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		/* Create the sensors. */
 		sonar = new UltrasonicSensor(SensorPort.S1);
 		touch = new TouchSensor(SensorPort.S2);
@@ -48,14 +52,16 @@ public class RyABI {
 		/* Create the pilot. */
 		pilot = new CompassPilot(compass, WHEEL_DIAMETER, TRACK_WIDTH, Motor.A, Motor.C);
 
-		/* Create the feature detectors and their listener. */
+		/* Create the feature detectors. */
 		rangeDetector = new RangeFeatureDetector(sonar, 20, 200);
 		touchDetector = new TouchFeatureDetector(touch);
 		lightDetector = new LightFeatureDetector(light);
 
-		rangeDetector.enableDetection(true);
-		touchDetector.enableDetection(true);
-		lightDetector.enableDetection(true);
+		detectorHandler = FeatureDetectorsHandler.getInstance();
+		detectorHandler.setRangeDetector(rangeDetector);
+		detectorHandler.setTouchDetector(touchDetector);
+		detectorHandler.setLightDetector(lightDetector);
+		detectorHandler.disableAllDetectors();
 
 		featureListener = new FeatureDetectionListener();
 		rangeDetector.addListener(featureListener);
@@ -66,11 +72,13 @@ public class RyABI {
 		Button.ESCAPE.addButtonListener(new QuitButtonListener());
 
 		/* Create the behaviors. */
-		behaviors = new Behavior[4];
+		behaviors = new Behavior[6];
 		behaviors[0] = new WanderBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
-		behaviors[1] = new SensorCalibrationBehavior(sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
-		behaviors[2] = new AvoidObstaclesBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
-		behaviors[3] = new VictoryBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[1] = new VictoryBehavior();
+		behaviors[2] = new SearchBoxBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[3] = new CatchBallBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[4] = new AvoidObstaclesBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[5] = new SensorCalibrationBehavior(sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
 
 		/* Start the program. */
 		arbitrator = new Arbitrator(behaviors, true);

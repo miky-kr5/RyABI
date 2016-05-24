@@ -22,8 +22,4 @@ public final class RobotStateSingleton {
 	public States getState() {
 		return this.state;
 	}
-
-	public enum States {
-		WANDER, SEARCH_BALL, BALL_FOUND, VICTORY, DONE;
-	}
 }

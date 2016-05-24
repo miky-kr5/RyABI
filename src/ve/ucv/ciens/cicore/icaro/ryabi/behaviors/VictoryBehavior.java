@@ -1,44 +1,81 @@
 package ve.ucv.ciens.cicore.icaro.ryabi.behaviors;
 
-import java.io.File;
-
-import lejos.nxt.LightSensor;
 import lejos.nxt.Sound;
-import lejos.nxt.TouchSensor;
-import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.addon.CompassHTSensor;
-import lejos.robotics.navigation.ArcRotateMoveController;
+import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectorsHandler;
+import ve.ucv.ciens.cicore.icaro.ryabi.sensors.SensorEventsQueue;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.RobotStateSingleton;
+import ve.ucv.ciens.cicore.icaro.ryabi.utils.States;
 
+@SuppressWarnings("unused")
 public class VictoryBehavior extends BaseBehavior {
-	private RobotStateSingleton state;
-	private File                musicSample;
+	private static final int C = 262;
+	private static final int D = 287;
+	private static final int E = 320;
+	private static final int F = 349;
+	private static final int G = 392;
+	private static final int A = 440;
+	private static final int B = 494;
 
-	public VictoryBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light,
-			CompassHTSensor compass, float wheelDiameter, float trackWidth) {
-		super(pilot, sonar, touch, light, compass, wheelDiameter, trackWidth);
+	private RobotStateSingleton     state;
+	private SensorEventsQueue       queue;
+	private FeatureDetectorsHandler detectorHandler;
 
+	public VictoryBehavior() {
+		super(null, null, null, null, null, 0.0f, 0.0f);
 		state = RobotStateSingleton.getInstance();
-		musicSample = new File("victory.wav");
-		if(!musicSample.exists())
-			musicSample = null;
+		this.queue = SensorEventsQueue.getInstance();
+		this.detectorHandler = FeatureDetectorsHandler.getInstance();
 	}
 
 	@Override
 	public boolean takeControl() {
-		return state.getState() == RobotStateSingleton.States.VICTORY;
+		if(state.getState() == States.VICTORY) {
+			detectorHandler.disableAllDetectors();
+			return true;
+		}
+
+		if(queue.hasNextLightSensorEvent()) {
+			state.setState(States.VICTORY);
+			detectorHandler.disableAllDetectors();
+
+			while(queue.hasNextLightSensorEvent())
+				queue.getNextLightSensorEvent();
+
+			return true;
+
+		}
+
+		return false;
 	}
 
 	@Override
 	public void action() {
-		if(musicSample != null) {
-			int milis = Sound.playSample(musicSample);
-			try { Thread.sleep(milis); } catch(InterruptedException ie) { }
-		}
-		state.setState(RobotStateSingleton.States.DONE);
+		playToneDuration(B, 250);
+		playToneDuration(A, 250);
+		playToneDuration(G, 500);
+		playToneDuration(B, 250);
+		playToneDuration(A, 250);
+		playToneDuration(G, 500);
+		playToneDuration(G, 125);
+		playToneDuration(G, 125);
+		playToneDuration(G, 125);
+		playToneDuration(G, 125);
+		playToneDuration(A, 125);
+		playToneDuration(A, 125);
+		playToneDuration(A, 125);
+		playToneDuration(A, 125);
+		playToneDuration(B, 250);
+		playToneDuration(A, 250);
+		playToneDuration(G, 500);
+		state.setState(States.DONE);
 	}
 
 	@Override
 	public void suppress() { }
 
+
+	private void playToneDuration(int tone, int milis) {
+		Sound.playTone(tone, milis);
+		try { Thread.sleep(milis); } catch(InterruptedException ie) {}
+	}
 }

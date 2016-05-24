@@ -10,12 +10,12 @@ import lejos.robotics.objectdetection.TouchFeatureDetector;
 public final class SensorEventsQueue {
 	private Queue<SensorEvent> touchEventsQueue;
 	private Queue<SensorEvent> lightEventsQueue;
-	private Queue<SensorEvent> sonarEventsQueue;
+	private Queue<SensorEvent> rangeEventsQueue;
 
 	private SensorEventsQueue() {
 		touchEventsQueue = new Queue<SensorEvent>();
 		lightEventsQueue = new Queue<SensorEvent>();
-		sonarEventsQueue = new Queue<SensorEvent>();
+		rangeEventsQueue = new Queue<SensorEvent>();
 	}
 
 	private static class SingletonHolder {
@@ -34,7 +34,7 @@ public final class SensorEventsQueue {
 		} else if(detector instanceof LightFeatureDetector) {
 			lightEventsQueue.addElement(event);
 		} else if(detector instanceof RangeFeatureDetector) {
-			sonarEventsQueue.addElement(event);
+			rangeEventsQueue.addElement(event);
 		}
 	}
 
@@ -52,9 +52,9 @@ public final class SensorEventsQueue {
 			return null;
 	}
 
-	public synchronized SensorEvent getNextSonarSensorEvent() {
-		if(!sonarEventsQueue.empty())
-			return (SensorEvent) sonarEventsQueue.pop();
+	public synchronized SensorEvent getNextRangeSensorEvent() {
+		if(!rangeEventsQueue.empty())
+			return (SensorEvent) rangeEventsQueue.pop();
 		else
 			return null;
 	}
@@ -67,7 +67,7 @@ public final class SensorEventsQueue {
 		return !lightEventsQueue.empty();
 	}
 
-	public synchronized boolean hasNextSonarSensorEvent() {
-		return !sonarEventsQueue.empty();
+	public synchronized boolean hasNextRangeSensorEvent() {
+		return !rangeEventsQueue.empty();
 	}
 }

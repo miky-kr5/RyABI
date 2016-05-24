@@ -7,18 +7,23 @@ import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.ArcRotateMoveController;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.SensorEvent;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.SensorEventsQueue;
+import ve.ucv.ciens.cicore.icaro.ryabi.utils.RobotStateSingleton;
+import ve.ucv.ciens.cicore.icaro.ryabi.utils.Rotations;
+import ve.ucv.ciens.cicore.icaro.ryabi.utils.States;
 
 public class AvoidObstaclesBehavior extends BaseBehavior {
-	private SensorEventsQueue       queue;
+	private RobotStateSingleton state;
+	private SensorEventsQueue   queue;
 
 	public AvoidObstaclesBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelRadius, float trackWidth) {
 		super(pilot, sonar, touch, light, compass, wheelRadius, trackWidth);
+		this.state = RobotStateSingleton.getInstance();
 		this.queue = SensorEventsQueue.getInstance();
 	}
 
 	@Override
 	public boolean takeControl() {
-		return queue.hasNextTouchSensorEvent();
+		return state.getState() == States.WANDER && queue.hasNextTouchSensorEvent();
 	}
 
 	@Override
@@ -27,9 +32,9 @@ public class AvoidObstaclesBehavior extends BaseBehavior {
 
 		pilot.stop();
 		pilot.travel(-100);
-		rotate90();
+		Rotations.rotate90(compass, pilot);
 		pilot.travel(250);
-		rotateM90();
+		Rotations.rotateM90(compass, pilot);
 		pilot.stop();
 
 		if(!queue.hasNextTouchSensorEvent())
@@ -38,36 +43,4 @@ public class AvoidObstaclesBehavior extends BaseBehavior {
 
 	@Override
 	public void suppress() { }
-
-	private void rotate90() {
-		float cMeasure;
-
-		compass.resetCartesianZero();
-
-		pilot.setRotateSpeed(25);
-		pilot.rotate(Integer.MIN_VALUE - 1, true);
-
-		cMeasure = 360.0f;
-		try { Thread.sleep(200); } catch (InterruptedException e) { }
-		while(cMeasure > 270.0f) {
-			cMeasure = compass.getDegreesCartesian();
-		}
-		pilot.stop();
-	}
-
-	private void rotateM90() {
-		float cMeasure;
-
-		compass.resetCartesianZero();
-
-		pilot.setRotateSpeed(25);
-		pilot.rotate(-3000, true);
-
-		cMeasure = 0.0f;
-		try { Thread.sleep(200); } catch (InterruptedException e) { }
-		while(cMeasure < 90.0f) {
-			cMeasure = compass.getDegreesCartesian();
-		}
-		pilot.stop();
-	}
 }
