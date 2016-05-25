@@ -1,3 +1,16 @@
+/*
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * See the LICENSE file for more details.
+ */
+
 package ve.ucv.ciens.cicore.icaro.ryabi.behaviors;
 
 import lejos.nxt.LightSensor;
@@ -11,6 +24,16 @@ import ve.ucv.ciens.cicore.icaro.ryabi.utils.RobotStateSingleton;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.Rotations;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.States;
 
+/**
+ * This class implements a {@link BaseBehavior} that searches slowly to the left and right of the robot for the pedestal where the ball
+ * should be in. It first searches to the left of the robot until it hits an obstacle. Then it will search to the right of the robot
+ * until it hits another obstacle.
+ * 
+ * If the ball is not found after searching on both sides then the robot will make a 180 degrees turn and will start moving back
+ * to the start line.
+ * 
+ * @author Miguel Angel Astor Romero.
+ */
 public class SearchBallBehavior extends BaseBehavior {
 	private SensorEventsQueue       queue;
 	private boolean                 ballFound;
@@ -18,6 +41,16 @@ public class SearchBallBehavior extends BaseBehavior {
 	private RobotStateSingleton     state;
 	private boolean                 turnLeft;
 
+	/**
+	 * Creates a new {@link SearchBallBehavior}.
+	 * @param pilot
+	 * @param sonar
+	 * @param touch
+	 * @param light
+	 * @param compass
+	 * @param wheelDiameter
+	 * @param trackWidth
+	 */
 	public SearchBallBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelDiameter, float trackWidth) {
 		super(pilot, sonar, touch, light, compass, wheelDiameter, trackWidth);
 		this.queue = SensorEventsQueue.getInstance();
@@ -29,18 +62,23 @@ public class SearchBallBehavior extends BaseBehavior {
 
 	@Override
 	public boolean takeControl() {
+		/* If the ball has already been found then this behavior should not take control again. */
 		if(ballFound)
 			return false;
 
+		/* If the current state is SEARCH_BALL then set the detectors and take control. */
 		if(state.getState() == States.SEARCH_BALL) {
 			setDetectors();
 			return true;
 		}
 
+		/* If the state is not SEARCH_BALL but there is at least one light feature detected
+		 * indicating that the finish line has been reached then set the detectors and take control. */
 		if(queue.hasNextLightSensorEvent()) {
 			state.setState(States.SEARCH_BALL);
 			setDetectors();
 
+			/* Discard unneeded detected light features. */
 			while(queue.hasNextLightSensorEvent())
 				queue.getNextLightSensorEvent();
 
@@ -54,25 +92,30 @@ public class SearchBallBehavior extends BaseBehavior {
 	@Override
 	public void action() {
 		if(queue.hasNextRangeSensorEvent()) {
-
+			/* If the pedestal has been found then stop the robot and set the state to BALL_FOUND. */
 			if(pilot.isMoving())
 				pilot.stop();
 			ballFound = true;
 			state.setState(States.BALL_FOUND);
 
+			/* Discard unneeded range features. */
 			while(queue.hasNextRangeSensorEvent())
 				queue.getNextRangeSensorEvent();
 
 		} else {
 			if(turnLeft) {
+				/* Search to the left of the robot. */
 				Rotations.rotateM90(compass, pilot);
 				pilot.travel(50);
 
 				if(queue.hasNextTouchSensorEvent()) {
+					/* If an obstacle is found while searching then start searching
+					 * to the opposite side. */
 					pilot.travel(-100);
 
 					turnLeft = false;
 
+					/* Discard unneeded touch events. */
 					while(queue.hasNextTouchSensorEvent())
 						queue.getNextTouchSensorEvent();
 
@@ -82,15 +125,19 @@ public class SearchBallBehavior extends BaseBehavior {
 				Rotations.rotate90(compass, pilot);
 
 			} else {
+				/* Search to the right of the robot. */
 				Rotations.rotate90(compass, pilot);
 				pilot.travel(50);
 
 				if(queue.hasNextTouchSensorEvent()) {
+					/* If an obstacle is found while searching then give up and go back
+					 * to the start line. */
 					pilot.travel(-100);
 
 					state.setState(States.WANDER);
 					ballFound = true;
 
+					/* Discard unneeded touch events. */
 					while(queue.hasNextTouchSensorEvent())
 						queue.getNextTouchSensorEvent();
 
@@ -99,9 +146,9 @@ public class SearchBallBehavior extends BaseBehavior {
 
 				Rotations.rotateM90(compass, pilot);
 
-				if(ballFound) {
+				/* If the ball was found or the robot gave up then turn around towards the start line. */
+				if(ballFound)
 					Rotations.rotate180(compass, pilot);
-				}
 			}
 		}
 	}
@@ -112,6 +159,9 @@ public class SearchBallBehavior extends BaseBehavior {
 			pilot.stop();
 	}
 
+	/**
+	 * Enables the touch and range feature detectors and disables the light feature detector.
+	 */
 	private void setDetectors() {
 		detectorHandler.enableTouchDetector();
 		detectorHandler.disableLightDetector();

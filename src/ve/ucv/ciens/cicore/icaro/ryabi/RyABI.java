@@ -1,3 +1,16 @@
+/*
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * See the LICENSE file for more details.
+ */
+
 package ve.ucv.ciens.cicore.icaro.ryabi;
 
 import lejos.nxt.Button;
@@ -25,6 +38,11 @@ import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectionListener;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.LightFeatureDetector;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.QuitButtonListener;
 
+/**
+ * This class starts the execution of the program.
+ * 
+ * @author Miguel Angel Astor Romero.
+ */
 @SuppressWarnings("deprecation")
 public class RyABI {
 	private static final float WHEEL_DIAMETER = 56.0f;
@@ -43,6 +61,9 @@ public class RyABI {
 	private static FeatureDetectionListener featureListener;
 	private static FeatureDetectorsHandler  detectorHandler;
 
+	/**
+	 * Main method of the program.
+	 */
 	public static void main(String[] args) {
 		boolean invertLightDetector;
 		/* Create the sensors. */
@@ -100,11 +121,17 @@ public class RyABI {
 		arbitrator.start();
 	}
 
+	/**
+	 * Asks the user to select the light feature detection mode.
+	 * 
+	 * @return True if the user wants to invert the light detector (report when the robot passes from a dark area to a light area).
+	 */
 	private static boolean invertLightDetector() {
 		int btnID;
 		boolean invertSensor = false, done = false;
 
 		while(!done) {
+			/* Show the prompt on the screen. */
 			LCD.clear();
 			System.out.println("Invert l. sens:");
 			if(invertSensor)
@@ -114,17 +141,21 @@ public class RyABI {
 			System.out.println("Press ENTER");
 			System.out.println("to set.");
 
+			/* Wait for any button press. */
 			btnID = Button.waitForAnyPress();
 
 			switch(btnID) {
 			case Button.ID_LEFT:
 			case Button.ID_RIGHT:
+				/* If the user pressed any direction button then toggle the sensor. */
 				invertSensor = !invertSensor;
 				break;
 			case Button.ID_ENTER:
+				/* If the user pressed enter then end the loop. */
 				done = true;
 				break;
 			default:
+				/* If the user pressed escape then quit. */
 				System.exit(1);
 			}
 		}

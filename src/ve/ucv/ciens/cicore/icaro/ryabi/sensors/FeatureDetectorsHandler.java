@@ -1,8 +1,28 @@
+/*
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * See the LICENSE file for more details.
+ */
+
 package ve.ucv.ciens.cicore.icaro.ryabi.sensors;
 
 import lejos.robotics.objectdetection.RangeFeatureDetector;
 import lejos.robotics.objectdetection.TouchFeatureDetector;
+import lejos.robotics.subsumption.Behavior;
 
+/**
+ * Singleton class that holds all the feature detectors in one place so that the different {@link Behavior} implementations
+ * can operate on them.
+ * 
+ * @author Miguel Angel Astor Romero.
+ */
 public final class FeatureDetectorsHandler {
 	private RangeFeatureDetector     rangeDetector;
 	private TouchFeatureDetector     touchDetector;
@@ -18,6 +38,11 @@ public final class FeatureDetectorsHandler {
 		private static final FeatureDetectorsHandler INSTANCE = new FeatureDetectorsHandler();
 	}
 
+	/**
+	 * Gets the singleton instance of this class.
+	 * 
+	 * @return the instacne.
+	 */
 	public static FeatureDetectorsHandler getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
