@@ -23,13 +23,14 @@ public class AvoidObstaclesBehavior extends BaseBehavior {
 
 	@Override
 	public boolean takeControl() {
-		return state.getState() == States.WANDER && queue.hasNextTouchSensorEvent();
+		return queue.hasNextTouchSensorEvent() && state.getState() == States.WANDER;
 	}
 
 	@Override
 	public void action() {
 		SensorEvent event = queue.getNextTouchSensorEvent();
 
+		event.detector.enableDetection(false);
 		pilot.stop();
 		pilot.travel(-100);
 		Rotations.rotate90(compass, pilot);
@@ -37,8 +38,10 @@ public class AvoidObstaclesBehavior extends BaseBehavior {
 		Rotations.rotateM90(compass, pilot);
 		pilot.stop();
 
-		if(!queue.hasNextTouchSensorEvent())
-			event.detector.enableDetection(true);
+		while(queue.hasNextTouchSensorEvent())
+			event = queue.getNextTouchSensorEvent();
+
+		event.detector.enableDetection(true);
 	}
 
 	@Override

@@ -54,6 +54,7 @@ public class SearchBoxBehavior extends BaseBehavior {
 	@Override
 	public void action() {
 		if(queue.hasNextRangeSensorEvent()) {
+
 			if(pilot.isMoving())
 				pilot.stop();
 			ballFound = true;

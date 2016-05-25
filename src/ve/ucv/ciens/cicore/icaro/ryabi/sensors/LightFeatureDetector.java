@@ -46,7 +46,7 @@ public class LightFeatureDetector extends FeatureDetectorAdapter {
 		this.threshold = threshold;
 		this.invert = invert;
 
-		// Calculate angle a distance of bumper from center:
+		// Calculate angle and distance of light sensor from center:
 		Point robot_center = new Point(0, 0);
 		Point bumper_p = new Point((float)xOffset, (float)yOffset);
 		range = (float)robot_center.distance(xOffset, yOffset);
@@ -56,9 +56,16 @@ public class LightFeatureDetector extends FeatureDetectorAdapter {
 	@Override
 	public Feature scan() {
 		RangeFeature rf = null;
-		if(lightSensor.getLightValue() <= threshold) {
-			RangeReading rr = new RangeReading(angle, range);
-			rf = new RangeFeature(rr);
+		if(invert) {
+			if(lightSensor.getLightValue() >= threshold) {
+				RangeReading rr = new RangeReading(angle, range);
+				rf = new RangeFeature(rr);
+			}
+		} else {
+			if(lightSensor.getLightValue() < threshold) {
+				RangeReading rr = new RangeReading(angle, range);
+				rf = new RangeFeature(rr);
+			}
 		}
 		return rf;
 	}
@@ -70,7 +77,7 @@ public class LightFeatureDetector extends FeatureDetectorAdapter {
 		if(invert) {
 			while(lightSensor.getLightValue() >= threshold);
 		} else {
-			while(lightSensor.getLightValue() <= threshold);
+			while(lightSensor.getLightValue() < threshold);
 		}
 	}
 }
