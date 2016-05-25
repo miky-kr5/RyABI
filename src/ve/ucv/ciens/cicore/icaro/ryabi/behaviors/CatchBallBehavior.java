@@ -1,6 +1,7 @@
 package ve.ucv.ciens.cicore.icaro.ryabi.behaviors;
 
 import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
@@ -24,7 +25,8 @@ public class CatchBallBehavior extends BaseBehavior {
 
 	@Override
 	public void action() {
-		// TODO Close claw.
+		Motor.B.forward();
+		try { Thread.sleep(2000); } catch(InterruptedException e) { };
 
 		Rotations.rotate180(compass, pilot);
 		state.setState(States.WANDER);

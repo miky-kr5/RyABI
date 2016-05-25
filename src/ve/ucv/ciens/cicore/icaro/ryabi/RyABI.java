@@ -16,7 +16,7 @@ import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.AvoidObstaclesBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.CatchBallBehavior;
-import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.SearchBoxBehavior;
+import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.SearchBallBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.SensorCalibrationBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.VictoryBehavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.behaviors.WanderBehavior;
@@ -91,7 +91,7 @@ public class RyABI {
 		behaviors = new Behavior[5];
 		behaviors[0] = new WanderBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
 		behaviors[1] = new VictoryBehavior();
-		behaviors[2] = new SearchBoxBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
+		behaviors[2] = new SearchBallBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
 		behaviors[3] = new CatchBallBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
 		behaviors[4] = new AvoidObstaclesBehavior(pilot, sonar, touch, light, compass, WHEEL_DIAMETER, TRACK_WIDTH);
 

@@ -11,14 +11,14 @@ import ve.ucv.ciens.cicore.icaro.ryabi.utils.RobotStateSingleton;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.Rotations;
 import ve.ucv.ciens.cicore.icaro.ryabi.utils.States;
 
-public class SearchBoxBehavior extends BaseBehavior {
+public class SearchBallBehavior extends BaseBehavior {
 	private SensorEventsQueue       queue;
 	private boolean                 ballFound;
 	private FeatureDetectorsHandler detectorHandler;
 	private RobotStateSingleton     state;
 	private boolean                 turnLeft;
 
-	public SearchBoxBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelDiameter, float trackWidth) {
+	public SearchBallBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelDiameter, float trackWidth) {
 		super(pilot, sonar, touch, light, compass, wheelDiameter, trackWidth);
 		this.queue = SensorEventsQueue.getInstance();
 		this.ballFound = false;
