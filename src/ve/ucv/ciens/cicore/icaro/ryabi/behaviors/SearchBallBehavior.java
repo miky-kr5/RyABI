@@ -106,7 +106,7 @@ public class SearchBallBehavior extends BaseBehavior {
 			if(turnLeft) {
 				/* Search to the left of the robot. */
 				Rotations.rotateM90(compass, pilot);
-				pilot.travel(50);
+				pilot.travel(100);
 
 				if(queue.hasNextTouchSensorEvent()) {
 					/* If an obstacle is found while searching then start searching
@@ -127,7 +127,7 @@ public class SearchBallBehavior extends BaseBehavior {
 			} else {
 				/* Search to the right of the robot. */
 				Rotations.rotate90(compass, pilot);
-				pilot.travel(50);
+				pilot.travel(100);
 
 				if(queue.hasNextTouchSensorEvent()) {
 					/* If an obstacle is found while searching then give up and go back

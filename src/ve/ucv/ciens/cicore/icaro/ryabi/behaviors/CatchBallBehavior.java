@@ -53,7 +53,8 @@ public class CatchBallBehavior extends BaseBehavior {
 
 	@Override
 	public void action() {
-		Motor.B.forward();
+		pilot.travel(65);
+		Motor.B.backward();
 		try { Thread.sleep(2000); } catch(InterruptedException e) { };
 
 		/* Turn towards the start line and start moving. */
