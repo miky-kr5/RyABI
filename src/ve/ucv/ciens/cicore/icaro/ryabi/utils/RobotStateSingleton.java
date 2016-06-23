@@ -44,6 +44,7 @@ public final class RobotStateSingleton {
 	 * @param state the state to set.
 	 */
 	public synchronized void setState(States state) {
+		System.out.println(getStateName(state));
 		this.state = state;
 	}
 
@@ -54,5 +55,22 @@ public final class RobotStateSingleton {
 	 */
 	public States getState() {
 		return this.state;
+	}
+	
+	private String getStateName(States state) {
+		switch (state) {
+		case BALL_FOUND:
+			return "BALL FOUND";
+		case DONE:
+			return "DONE";
+		case SEARCH_BALL:
+			return "SEARCH BALL";
+		case VICTORY:
+			return "VICTORY";
+		case WANDER:
+			return "WANDER";
+		default:
+			return "ERROR";
+		}
 	}
 }

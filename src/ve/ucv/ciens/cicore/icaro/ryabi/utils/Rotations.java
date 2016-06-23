@@ -38,7 +38,6 @@ public abstract class Rotations {
 			pilot.rotate(diff);
 			cMeasure = 360.0f - compass.getDegreesCartesian();
 			diff = 90.0f - cMeasure;
-			System.out.println(cMeasure  + " " + diff);
 		} while(Math.abs(diff) > 1.0f);
 
 		pilot.stop();
@@ -61,29 +60,6 @@ public abstract class Rotations {
 			pilot.rotate(diff);
 			cMeasure = compass.getDegreesCartesian();
 			diff = -90 + cMeasure;
-			System.out.println(cMeasure  + " " + diff);
-		} while(Math.abs(diff) > 1.0f);
-
-		pilot.stop();
-	}
-
-	/**
-	 * Rotates the robot 180 degrees clockwise.
-	 * 
-	 * @param compass A {@link CompassHTSensor} to use to make good turns.
-	 * @param pilot The {@link ArcRotateMoveController} implementation that controls the robot.
-	 */
-	public static void rotate180(CompassHTSensor compass, ArcRotateMoveController pilot) {
-		float cMeasure = 0.0f, diff = 0.0f;
-
-		pilot.stop();
-		compass.resetCartesianZero();
-		pilot.setRotateSpeed(25);
-		diff = 180.0f - cMeasure;
-		do {
-			pilot.rotate(diff);
-			cMeasure = compass.getDegreesCartesian();
-			diff = 180.0f - cMeasure;
 		} while(Math.abs(diff) > 1.0f);
 
 		pilot.stop();

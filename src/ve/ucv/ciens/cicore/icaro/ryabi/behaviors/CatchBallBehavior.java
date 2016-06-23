@@ -56,9 +56,11 @@ public class CatchBallBehavior extends BaseBehavior {
 		pilot.travel(65);
 		Motor.B.backward();
 		try { Thread.sleep(2000); } catch(InterruptedException e) { };
-
+		Motor.B.stop(true);
 		/* Turn towards the start line and start moving. */
-		Rotations.rotate180(compass, pilot);
+		Rotations.rotate90(compass, pilot);
+		Rotations.rotate90(compass, pilot);
+		pilot.travel(200);
 		state.setState(States.WANDER);
 	}
 

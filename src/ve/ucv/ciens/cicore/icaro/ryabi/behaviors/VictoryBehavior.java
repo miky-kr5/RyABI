@@ -15,7 +15,12 @@ package ve.ucv.ciens.cicore.icaro.ryabi.behaviors;
 
 import java.awt.Point;
 
+import lejos.nxt.LightSensor;
 import lejos.nxt.Sound;
+import lejos.nxt.TouchSensor;
+import lejos.nxt.UltrasonicSensor;
+import lejos.nxt.addon.CompassHTSensor;
+import lejos.robotics.navigation.ArcRotateMoveController;
 import lejos.robotics.subsumption.Behavior;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.FeatureDetectorsHandler;
 import ve.ucv.ciens.cicore.icaro.ryabi.sensors.SensorEventsQueue;
@@ -28,7 +33,7 @@ import ve.ucv.ciens.cicore.icaro.ryabi.utils.States;
  * @author Miguel Angel Astor Romero.
  */
 @SuppressWarnings("unused")
-public class VictoryBehavior implements Behavior {
+public class VictoryBehavior extends BaseBehavior {
 	private static final int C       = 262;
 	private static final int D       = 287;
 	private static final int E       = 320;
@@ -49,7 +54,9 @@ public class VictoryBehavior implements Behavior {
 	/**
 	 * Creates a new {@link VictoryBehavior}.
 	 */
-	public VictoryBehavior() {
+	public VictoryBehavior(ArcRotateMoveController pilot, UltrasonicSensor sonar, TouchSensor touch, LightSensor light, CompassHTSensor compass, float wheelDiameter, float trackWidth) {
+		super(pilot, sonar, touch, light, compass, wheelDiameter, trackWidth);
+
 		state = RobotStateSingleton.getInstance();
 		this.queue = SensorEventsQueue.getInstance();
 		this.detectorHandler = FeatureDetectorsHandler.getInstance();
@@ -101,6 +108,7 @@ public class VictoryBehavior implements Behavior {
 
 	@Override
 	public void action() {
+		pilot.stop();
 		/* Play some music! */
 		playMusic(score);
 
