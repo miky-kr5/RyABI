@@ -28,21 +28,18 @@ public abstract class Rotations {
 	 * @param pilot The {@link ArcRotateMoveController} implementation that controls the robot.
 	 */
 	public static void rotate90(CompassHTSensor compass, ArcRotateMoveController pilot) {
-		float cMeasure;
+		float cMeasure = 0.0f, diff;
 
-		/* First reset the compass. */
+		pilot.stop();
 		compass.resetCartesianZero();
-
-		/* Start rotating slowly. */
 		pilot.setRotateSpeed(25);
-		pilot.rotate(Integer.MIN_VALUE - 1, true);
-
-		/* Keep rotating until the robot has turned 90 degrees. */
-		cMeasure = 360.0f;
-		try { Thread.sleep(200); } catch (InterruptedException e) { }
-		while(cMeasure > 270.0f) {
+		diff = 90.0f - cMeasure;
+		do {
+			pilot.rotate(diff);
 			cMeasure = compass.getDegreesCartesian();
-		}
+			diff = 90.0f - cMeasure;
+		} while(Math.abs(diff) > 1.0f);
+
 		pilot.stop();
 	}
 
@@ -53,21 +50,18 @@ public abstract class Rotations {
 	 * @param pilot The {@link ArcRotateMoveController} implementation that controls the robot.
 	 */
 	public static void rotateM90(CompassHTSensor compass, ArcRotateMoveController pilot) {
-		float cMeasure;
+		float cMeasure = 0.0f, diff;
 
-		/* First reset the compass. */
+		pilot.stop();
 		compass.resetCartesianZero();
-
-		/* Start rotating slowly. */
 		pilot.setRotateSpeed(25);
-		pilot.rotate(-3000, true);
-
-		/* Keep rotating until the robot has turned 90 degrees. */
-		cMeasure = 0.0f;
-		try { Thread.sleep(200); } catch (InterruptedException e) { }
-		while(cMeasure < 90.0f) {
+		diff = -90;
+		do {
+			pilot.rotate(diff);
 			cMeasure = compass.getDegreesCartesian();
-		}
+			diff = -90 + cMeasure;
+		} while(Math.abs(diff) > 1.0f);
+
 		pilot.stop();
 	}
 
@@ -78,21 +72,18 @@ public abstract class Rotations {
 	 * @param pilot The {@link ArcRotateMoveController} implementation that controls the robot.
 	 */
 	public static void rotate180(CompassHTSensor compass, ArcRotateMoveController pilot) {
-		float cMeasure;
+		float cMeasure = 0.0f, diff = 0.0f;
 
-		/* First reset the compass. */
+		pilot.stop();
 		compass.resetCartesianZero();
-
-		/* Start rotating slowly. */
 		pilot.setRotateSpeed(25);
-		pilot.rotate(Integer.MIN_VALUE - 1, true);
-
-		/* Keep rotating until the robot has turned 90 degrees. */
-		cMeasure = 360.0f;
-		try { Thread.sleep(200); } catch (InterruptedException e) { }
-		while(cMeasure > 180.0f) {
+		diff = 180.0f - cMeasure;
+		do {
+			pilot.rotate(diff);
 			cMeasure = compass.getDegreesCartesian();
-		}
+			diff = 180.0f - cMeasure;
+		} while(Math.abs(diff) > 1.0f);
+
 		pilot.stop();
 	}
 }

@@ -117,7 +117,7 @@ public class SearchBallBehavior extends BaseBehavior {
 					if(queue.hasNextTouchSensorEvent()) {
 						/* If an obstacle is found while searching then start searching
 						 * to the opposite side. */
-						pilot.travel(-100);
+						pilot.travel(-200);
 
 						turnLeft = false;
 
@@ -138,7 +138,7 @@ public class SearchBallBehavior extends BaseBehavior {
 					if(queue.hasNextTouchSensorEvent()) {
 						/* If an obstacle is found while searching then give up and go back
 						 * to the start line. */
-						pilot.travel(-100);
+						pilot.travel(-200);
 
 						state.setState(States.WANDER);
 						ballFound = true;
