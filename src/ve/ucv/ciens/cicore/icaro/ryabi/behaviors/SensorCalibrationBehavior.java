@@ -54,7 +54,7 @@ public class SensorCalibrationBehavior extends BaseBehavior {
 		/* Calibrate the compass by turning slowly by 720 degrees. */
 		System.out.println("Calib. compass");
 		DifferentialPilot p = new DifferentialPilot(wheelDiameter, trackWidth, Motor.A, Motor.C);
-		p.setRotateSpeed(25);
+		p.setRotateSpeed(20);
 		compass.startCalibration();
 		p.rotate(720, false);
 		compass.stopCalibration();

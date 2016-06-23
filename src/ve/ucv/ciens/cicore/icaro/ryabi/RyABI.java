@@ -78,7 +78,7 @@ public class RyABI {
 		pilot = new CompassPilot(compass, WHEEL_DIAMETER, TRACK_WIDTH, Motor.A, Motor.C);
 
 		/* Create the feature detectors. */
-		rangeDetector = new RangeFeatureDetector(sonar, 20, 200);
+		rangeDetector = new RangeFeatureDetector(sonar, 30, 200);
 		touchDetector = new TouchFeatureDetector(touch);
 		lightDetector = new LightFeatureDetector(light, invertLightDetector);
 

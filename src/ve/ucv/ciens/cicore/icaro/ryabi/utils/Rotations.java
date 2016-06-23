@@ -36,8 +36,9 @@ public abstract class Rotations {
 		diff = 90.0f - cMeasure;
 		do {
 			pilot.rotate(diff);
-			cMeasure = compass.getDegreesCartesian();
+			cMeasure = 360.0f - compass.getDegreesCartesian();
 			diff = 90.0f - cMeasure;
+			System.out.println(cMeasure  + " " + diff);
 		} while(Math.abs(diff) > 1.0f);
 
 		pilot.stop();
@@ -60,6 +61,7 @@ public abstract class Rotations {
 			pilot.rotate(diff);
 			cMeasure = compass.getDegreesCartesian();
 			diff = -90 + cMeasure;
+			System.out.println(cMeasure  + " " + diff);
 		} while(Math.abs(diff) > 1.0f);
 
 		pilot.stop();

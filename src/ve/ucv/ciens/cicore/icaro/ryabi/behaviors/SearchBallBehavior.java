@@ -96,66 +96,64 @@ public class SearchBallBehavior extends BaseBehavior {
 
 	@Override
 	public void action() {
-		while(!supress) {
-			if(queue.hasNextRangeSensorEvent()) {
-				/* If the pedestal has been found then stop the robot and set the state to BALL_FOUND. */
-				if(pilot.isMoving())
-					pilot.stop();
-				ballFound = true;
-				state.setState(States.BALL_FOUND);
+		if(queue.hasNextRangeSensorEvent()) {
+			/* If the pedestal has been found then stop the robot and set the state to BALL_FOUND. */
+			if(pilot.isMoving())
+				pilot.stop();
+			ballFound = true;
+			state.setState(States.BALL_FOUND);
 
-				/* Discard unneeded range features. */
-				while(queue.hasNextRangeSensorEvent())
-					queue.getNextRangeSensorEvent();
+			/* Discard unneeded range features. */
+			while(queue.hasNextRangeSensorEvent())
+				queue.getNextRangeSensorEvent();
+
+		} else {
+			if(turnLeft) {
+				/* Search to the left of the robot. */
+				Rotations.rotateM90(compass, pilot);
+				pilot.travel(100);
+
+				if(queue.hasNextTouchSensorEvent()) {
+					/* If an obstacle is found while searching then start searching
+					 * to the opposite side. */
+					pilot.travel(-200);
+
+					turnLeft = false;
+
+					/* Discard unneeded touch events. */
+					while(queue.hasNextTouchSensorEvent())
+						queue.getNextTouchSensorEvent();
+
+					detectorHandler.enableTouchDetector();
+				}
+
+				Rotations.rotate90(compass, pilot);
 
 			} else {
-				if(turnLeft) {
-					/* Search to the left of the robot. */
-					Rotations.rotateM90(compass, pilot);
-					pilot.travel(100);
+				/* Search to the right of the robot. */
+				Rotations.rotate90(compass, pilot);
+				pilot.travel(100);
 
-					if(queue.hasNextTouchSensorEvent()) {
-						/* If an obstacle is found while searching then start searching
-						 * to the opposite side. */
-						pilot.travel(-200);
+				if(queue.hasNextTouchSensorEvent()) {
+					/* If an obstacle is found while searching then give up and go back
+					 * to the start line. */
+					pilot.travel(-200);
 
-						turnLeft = false;
+					state.setState(States.WANDER);
+					ballFound = true;
 
-						/* Discard unneeded touch events. */
-						while(queue.hasNextTouchSensorEvent())
-							queue.getNextTouchSensorEvent();
+					/* Discard unneeded touch events. */
+					while(queue.hasNextTouchSensorEvent())
+						queue.getNextTouchSensorEvent();
 
-						detectorHandler.enableTouchDetector();
-					}
-
-					Rotations.rotate90(compass, pilot);
-
-				} else {
-					/* Search to the right of the robot. */
-					Rotations.rotate90(compass, pilot);
-					pilot.travel(100);
-
-					if(queue.hasNextTouchSensorEvent()) {
-						/* If an obstacle is found while searching then give up and go back
-						 * to the start line. */
-						pilot.travel(-200);
-
-						state.setState(States.WANDER);
-						ballFound = true;
-
-						/* Discard unneeded touch events. */
-						while(queue.hasNextTouchSensorEvent())
-							queue.getNextTouchSensorEvent();
-
-						detectorHandler.enableTouchDetector();
-					}
-
-					Rotations.rotateM90(compass, pilot);
-
-					/* If the ball was found or the robot gave up then turn around towards the start line. */
-					if(ballFound)
-						Rotations.rotate180(compass, pilot);
+					detectorHandler.enableTouchDetector();
 				}
+
+				Rotations.rotateM90(compass, pilot);
+
+				/* If the ball was found or the robot gave up then turn around towards the start line. */
+				if(ballFound)
+					Rotations.rotate180(compass, pilot);
 			}
 		}
 	}
