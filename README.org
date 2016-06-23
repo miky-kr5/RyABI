@@ -15,8 +15,7 @@ The goal of the controller is to find a ball (in yellow) that is located on one 
 while avoiding any obstacles (in black) it can find. Once the ball is found, or the robot has collided with any
 of the two obstacles at the sides of the goal line, the controller will return to the starting line (in blue).
 
-The floor and the start/goal lines must be of constrasting colors. Contrary to what the diagram implies, both
-the start and goal lines *must* be of a similar color.
+The floor and the start/goal lines must be of constrasting colors.
 
 ** Robot
 
