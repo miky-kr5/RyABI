@@ -9,47 +9,6 @@ subsumption reactive control architecture.
 
 The controller assumes an environment like the following:
 
-#+BEGIN_SRC ditaa :file environment.png :cmdline -o -E
-    .                                                                         +-----------+
-    .                                                                         |           |
-    .                                                                         |cBLK       |
-  +----+                                                                      +------+----+
-  |    |                                                                             |    |
-  |    |                                                                             |    |
-  |    |                        +---------+                                          |    |
-  |    |                        |         |                                          |    |
-  |    |                        |         |                                          |    |
-  |    |                        |         |                                          |    |
-  |    |                        |         |                                          |    |
-  |    |    +-----+             |         |                                          |    |
-  |    |    |Robot|             |         |                                          |    |
-  |    |    |cGRE |             |         |                                          |    |
-  |    |    +-----+             |         |                                          |    |
-  |    |                        |         |                                          |    |
-  |    |                        |         |                +---------+               |    |
-  |    |                        | cBLK    |                |         |               |    |     +-----+
-  |    |                        +---------+                |         |               |    |     |Ball |
-  |    |                                                   |         |               |    |     |cYEL |
-  |    |                                                   |         |               |    |     +-----+
-  |    |                                                   |         |               |    |
-  |    |                                                   |         |               |    |
-  |    |                                                   |         |               |    |
-  |    |                                                   |         |               |    |
-  |    |                                                   | cBLK    |               |    |
-  |    |                                                   +---------+               |    |
-  |    |                                                                             |    |
-  |    |                                                                             |    |
-  |    |                                                                             |    |
-  |    |                                                                             |    |
-  |cBLU|                                                                             |cPNK|
-  +----+                                                                      +------+----+
-    .                                                                         |           |
-    .                                                                         |cBLK       |
-    .                                                                         +-----------+
-
-#+END_SRC
-
-#+RESULTS:
 [[file:environment.png]]
 
 The goal of the controller is to find a ball (in yellow) that is located on one side of a goal line (in pink),
