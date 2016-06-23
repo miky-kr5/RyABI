@@ -1,7 +1,84 @@
-* RyABI
+* RyABI (/Robótica y Aprendizaje Bio-Inspirado/ - Robotics and Bio-Inspired Learning)
 
 ** Abstract
-RyABI (/Robótica y Aprendizaje Bio-Inspirado/ - Robotics and Bio-Inspired Learning) is a control program for LEGO Mindstorms NXT using the LeJOS NXJ
-firmware. It is developed as part of the homonimous course being taught at the Computer Sciences School of the UCV.
 
-Future verions of this README file will include a technical report on the development of the project.
+RyABI is a control program for LEGO Mindstorms NXT using the LeJOS NXJ firmware. The controller is based on the
+subsumption reactive control architecture.
+
+** Objective
+
+The controller assumes an environment like the following:
+
+#+BEGIN_SRC ditaa :file environment.png :cmdline -o -E
+    .                                                                         +-----------+
+    .                                                                         |           |
+    .                                                                         |cBLK       |
+  +----+                                                                      +------+----+
+  |    |                                                                             |    |
+  |    |                                                                             |    |
+  |    |                        +---------+                                          |    |
+  |    |                        |         |                                          |    |
+  |    |                        |         |                                          |    |
+  |    |                        |         |                                          |    |
+  |    |                        |         |                                          |    |
+  |    |    +-----+             |         |                                          |    |
+  |    |    |Robot|             |         |                                          |    |
+  |    |    |cGRE |             |         |                                          |    |
+  |    |    +-----+             |         |                                          |    |
+  |    |                        |         |                                          |    |
+  |    |                        |         |                +---------+               |    |
+  |    |                        | cBLK    |                |         |               |    |     +-----+
+  |    |                        +---------+                |         |               |    |     |Ball |
+  |    |                                                   |         |               |    |     |cYEL |
+  |    |                                                   |         |               |    |     +-----+
+  |    |                                                   |         |               |    |
+  |    |                                                   |         |               |    |
+  |    |                                                   |         |               |    |
+  |    |                                                   |         |               |    |
+  |    |                                                   | cBLK    |               |    |
+  |    |                                                   +---------+               |    |
+  |    |                                                                             |    |
+  |    |                                                                             |    |
+  |    |                                                                             |    |
+  |    |                                                                             |    |
+  |cBLU|                                                                             |cPNK|
+  +----+                                                                      +------+----+
+    .                                                                         |           |
+    .                                                                         |cBLK       |
+    .                                                                         +-----------+
+
+#+END_SRC
+
+#+RESULTS:
+[[file:environment.png]]
+
+The goal of the controller is to find a ball (in yellow) that is located on one side of a goal line (in pink),
+while avoiding any obstacles (in black) it can find. Once the ball is found, or the robot has collided with any
+of the two obstacles at the sides of the goal line, the controller will return to the starting line (in blue).
+
+The floor and the start/goal lines must be of constrasting colors. Contrary to what the diagram implies, both
+the start and goal lines *must* be of a similar color.
+
+** Robot
+
+The robot is based on a differential drive and must use the following motors:
+
+ * Motors A and C :: Attached to the wheels. Used to move and steer the robot.
+ * Motor B :: Attached to a gripper claw. Used to catch the ball.
+
+It must also use the following sensors:
+
+ * Ultrasonic ranger :: Used to find the ball. Attached to port 1.
+ * Touch bumper :: Used to detect obstacles. Attached to port 2.
+ * HiTechnic compass :: Used to steer and move with some precission. Attached to port 3.
+ * Greyscale light detector :: Used to find the start and goal lines. Attached to port 4.
+
+** Subsumption
+
+The controller uses the following five behaviors:
+
+ * Wander :: Simply moves the robot forward.
+ * Search :: When the goal line is found the robot will start searching for the ball using the range sensor.
+ * Catch :: When the ball has been found the robot will attempt to grab it with it's gripper.
+ * Victory :: When the start line is crossed the robot will stop moving a play a little tune.
+ * Avoid :: If the robot bumped against an obstacle then the robot will move a bit to the right to avoid it. It may take many attempts to clear a wide obstacle.

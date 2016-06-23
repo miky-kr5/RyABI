@@ -46,7 +46,7 @@ import ve.ucv.ciens.cicore.icaro.ryabi.utils.QuitButtonListener;
 @SuppressWarnings("deprecation")
 public class RyABI {
 	private static final float WHEEL_DIAMETER = 56.0f;
-	private static final float TRACK_WIDTH = 155.0f;
+	private static final float TRACK_WIDTH = 144.0f;
 
 	private static ArcRotateMoveController  pilot;
 	private static UltrasonicSensor         sonar;

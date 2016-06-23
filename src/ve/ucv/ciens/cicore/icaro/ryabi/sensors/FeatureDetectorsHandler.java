@@ -41,7 +41,7 @@ public final class FeatureDetectorsHandler {
 	/**
 	 * Gets the singleton instance of this class.
 	 * 
-	 * @return the instacne.
+	 * @return the instance.
 	 */
 	public static FeatureDetectorsHandler getInstance() {
 		return SingletonHolder.INSTANCE;

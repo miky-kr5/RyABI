@@ -63,18 +63,19 @@ public class SearchBallBehavior extends BaseBehavior {
 	@Override
 	public boolean takeControl() {
 		/* If the ball has already been found then this behavior should not take control again. */
-		if(ballFound)
+		if(ballFound) {
 			return false;
+		}
 
 		/* If the current state is SEARCH_BALL then set the detectors and take control. */
-		if(state.getState() == States.SEARCH_BALL) {
+		if(state.getState() == States.SEARCH_BALL && !ballFound) {
 			setDetectors();
 			return true;
 		}
 
 		/* If the state is not SEARCH_BALL but there is at least one light feature detected
 		 * indicating that the finish line has been reached then set the detectors and take control. */
-		if(queue.hasNextLightSensorEvent()) {
+		if(queue.hasNextLightSensorEvent() && !ballFound) {
 			state.setState(States.SEARCH_BALL);
 			setDetectors();
 
@@ -91,6 +92,7 @@ public class SearchBallBehavior extends BaseBehavior {
 
 	@Override
 	public void action() {
+		boolean _ballFound = false;
 		boolean obstacleFound = false;
 
 		/* Discard unneeded touch events. */
@@ -106,9 +108,11 @@ public class SearchBallBehavior extends BaseBehavior {
 		pilot.stop();
 
 		if(!obstacleFound) {
-			ballFound = searchBall();
-			if(ballFound)
+			_ballFound = searchBall();
+			if(_ballFound) {
+				ballFound = true;
 				state.setState(States.BALL_FOUND);
+			}
 		} else {
 			ballFound = true;
 			Rotations.rotate90(compass, pilot);
@@ -127,7 +131,7 @@ public class SearchBallBehavior extends BaseBehavior {
 	private void setDetectors() {
 		detectorHandler.enableTouchDetector();
 		detectorHandler.disableLightDetector();
-		detectorHandler.disableRangeDetector();
+		detectorHandler.enableRangeDetector();
 	}
 
 	private void moveLeft() {
@@ -157,17 +161,17 @@ public class SearchBallBehavior extends BaseBehavior {
 	private boolean searchBall() {
 		boolean found = false;
 
-		detectorHandler.enableRangeDetector();
-		activeWait(1000);
+		while(queue.hasNextRangeSensorEvent())
+			queue.getNextRangeSensorEvent();
+
+		try { Thread.sleep(2000); } catch(InterruptedException e) { };
 		if(queue.hasNextRangeSensorEvent()) {
-			/* If the pedestal has been found then stop the robot and set the state to BALL_FOUND. */
-			state.setState(States.BALL_FOUND);
+			found = true;
 
 			/* Discard unneeded range features. */
 			while(queue.hasNextRangeSensorEvent())
 				queue.getNextRangeSensorEvent();
 		}
-		detectorHandler.disableRangeDetector();
 
 		return found;
 	}
@@ -187,13 +191,5 @@ public class SearchBallBehavior extends BaseBehavior {
 		}
 
 		return obstacleFound;
-	}
-
-	private void activeWait(long milliseconds) {
-		long then = System.currentTimeMillis(), now;
-		System.out.println("Waiting.");
-		do {
-			now = System.currentTimeMillis();
-		} while(now - then < 1000);
 	}
 }
